@@ -20,7 +20,7 @@ const peliculasPaginadas = peliculas.slice(start, end);
     <div class="galeria">
       {peliculasPaginadas.map(pelicula => (
         <div class="tarjeta">
-          <button onclick={`toggleFavorito(${pelicula.id})`} class="favorito-btn">❤️</button>
+          <button class="favorito-btn" data-id={pelicula.id}></button>
           <a href={`/peliculas/${pelicula.id}`}>
             <img src={pelicula.imagen} alt={pelicula.titulo} />
             <div class="overlay">
@@ -175,19 +175,33 @@ const peliculasPaginadas = peliculas.slice(start, end);
 
 
   </style>
-  <script is:inline>
-    function toggleFavorito(id) {
-      let favoritos = JSON.parse(localStorage.getItem('favoritos')) || [];
-      if (favoritos.includes(id)) {
-        favoritos = favoritos.filter(favId => favId !== id);
-      } else {
-        favoritos.push(id);
-      }
-      localStorage.setItem('favoritos', JSON.stringify(favoritos));
-      alert('Película actualizada en Mi Lista');
-    }
-  </script>
-  
 
+<script is:inline>
+  document.addEventListener("DOMContentLoaded", () => {
+    let favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
+    
+    document.querySelectorAll(".favorito-btn").forEach((btn) => {
+      const id = String(btn.getAttribute("data-id"));
+      
+      // Mostrar estado inicial
+      btn.textContent = favoritos.includes(id) ? "❤️" : "🤍";
+      
+      btn.addEventListener("click", () => {
+        favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
+        
+        if (favoritos.includes(id)) {
+          favoritos = favoritos.filter(favId => favId !== id);
+          btn.textContent = "🤍";
+          alert("Película eliminada de Mi Lista");
+        } else {
+          favoritos.push(id);
+          btn.textContent = "❤️";
+          alert("Película guardada en Mi Lista");
+        }
+        localStorage.setItem("favoritos", JSON.stringify(favoritos));
+      });
+    });
+  });
+</script>
 
 </Layout>

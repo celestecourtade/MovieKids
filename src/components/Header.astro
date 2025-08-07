@@ -127,27 +127,6 @@
     }
 
     </style>  
-    <script is:inline>
-        const botonModo = document.getElementById('modo-btn');
-
-        function setTheme(theme) {
-            document.documentElement.setAttribute('data-theme', theme);
-            localStorage.setItem('theme', theme);
-            botonModo.textContent = theme === 'dark' ? '☀️' : '🌙';
-        }
-
-        botonModo?.addEventListener('click', () => {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            setTheme(newTheme);
-        });
-
-        // Al cargar la página
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            setTheme(savedTheme);
-        });
-</script>
 
 
 
