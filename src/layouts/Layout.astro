@@ -1,69 +1,121 @@
 ---
 import Header from '../components/Header.astro';
+const { title } = Astro.props;
 ---
 
-<!doctype html>
-<html lang="en">
+<html lang="es" class="light">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="generator" content={Astro.generator} />
-    <title>Astro Basics</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+
+    <style>
+      /* Variables para modo claro */
+      :root {
+        --color-fondo: linear-gradient(to bottom, #f0e6ff, #d6c0ff);
+        --color-texto: #222222;
+        --color-primario: #ff4081;
+        --color-overlay: rgba(0, 0, 0, 0.85);
+        --color-boton: #ff4081;
+        --color-boton-hover: #e91e63;
+        --color-boton-deshabilitado: #ccc;
+        --color-boton-texto-deshabilitado: #666;
+        --color-sombra: rgba(0, 0, 0, 0.3);
+      }
+
+      /* Variables para modo oscuro */
+      html.dark {
+        --color-fondo: linear-gradient(to bottom, #2f1b55, #78297e);
+        --color-paginado: #78297e;
+        --color-texto: #ffffff;
+        --color-primario: #ff4081;
+        --color-overlay: rgba(0, 0, 0, 0.85);
+        --color-boton: #ff4081;
+        --color-boton-hover: #e91e63;
+        --color-boton-deshabilitado: #444;
+        --color-boton-texto-deshabilitado: #999;
+        --color-sombra: rgba(0, 0, 0, 0.7);
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: var(--color-fondo);
+        color: var(--color-texto);
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
+          sans-serif;
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+
+      a {
+        color: var(--color-primario);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .toggle-btn {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        z-index: 999;
+        background-color: var(--color-boton);
+        color: white;
+        border: none;
+        border-radius: 0.375rem;
+        font-weight: 700;
+        transition: background-color 0.3s ease;
+      }
+
+      .toggle-btn:hover {
+        background-color: var(--color-boton-hover);
+      }
+    </style>
+
+    <script is:inline>
+      document.addEventListener("DOMContentLoaded", () => {
+        const html = document.documentElement;
+        const toggleBtn = document.getElementById("theme-toggle");
+        const savedTheme = localStorage.getItem("theme");
+
+        if (savedTheme === "dark") {
+        html.classList.add("dark");
+        html.classList.remove("light");
+        toggleBtn.textContent = "🌙"; // luna porque está oscuro
+      } else {
+        html.classList.add("light");
+        html.classList.remove("dark");
+        toggleBtn.textContent = "☀️"; // sol porque está claro
+      }
+
+      toggleBtn.addEventListener("click", () => {
+        if (html.classList.contains("dark")) {
+          // cambiar a claro
+          html.classList.remove("dark");
+          html.classList.add("light");
+          toggleBtn.textContent = "☀️"; // sol porque quedó claro
+          localStorage.setItem("theme", "light");
+        } else {
+          // cambiar a oscuro
+          html.classList.remove("light");
+          html.classList.add("dark");
+          toggleBtn.textContent = "🌙"; // luna porque quedó oscuro
+          localStorage.setItem("theme", "dark");
+        }
+      });
+
+      });
+    </script>
   </head>
+
   <body>
     <Header />
-    <main>
-      <slot />
-    </main>
+    <button id="theme-toggle" class="toggle-btn">🌙</button>
+    <slot />
   </body>
 </html>
-
-<style>
-/* Variables para modo claro */
-:root {
-  --color-fondo: linear-gradient(to bottom, #f0e6ff, #d6c0ff);
-  --color-texto: #222222;
-  --color-primario: #ff4081;
-  --color-overlay: rgba(0, 0, 0, 0.85);
-  --color-boton: #ff4081;
-  --color-boton-hover: #e91e63;
-  --color-boton-deshabilitado: #ccc;
-  --color-boton-texto-deshabilitado: #666;
-  --color-sombra: rgba(0, 0, 0, 0.3);
-}
-
-/* Variables para modo oscuro */
-body.modo-oscuro {
-  --color-fondo: linear-gradient(to bottom, #2f1b55, #78297e);
-  --color-texto: #ffffff;
-  --color-primario: #ff4081;
-  --color-overlay: rgba(0, 0, 0, 0.85);
-  --color-boton: #ff4081;
-  --color-boton-hover: #e91e63;
-  --color-boton-deshabilitado: #444;
-  --color-boton-texto-deshabilitado: #999;
-  --color-sombra: rgba(0, 0, 0, 0.7);
-}
-
-/* Estilos base */
-body {
-  margin: 0;
-  min-height: 100vh;
-  background: var(--color-fondo);
-  color: var(--color-texto);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-	Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
-	sans-serif;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-a {
-  color: var(--color-primario);
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-</style>

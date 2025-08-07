@@ -44,128 +44,135 @@ const peliculasPaginadas = peliculas.slice(start, end);
   </div>
 
     <style>
-    .page-container {
-      background: linear-gradient(to bottom, #2f1b55, #78297e); /* degradado oscuro violeta-azulado */
-      min-height: 100vh; /* para que tome toda la altura visible */
-      padding: 20px 0;
-    }
-    /* Estilos para la paginación, tarjetas y más */
-    .titulo {
-      font-size: 2.5rem;
-      text-align: center;
-      margin: 30px 0 20px;
-      color: #ff4081;
-      font-family: 'Arial Black', sans-serif;
-    }
+      .page-container {
+    /* Cambiamos el fondo fijo por la variable que cambia con el modo */
+    background: var(--color-fondo);
+    min-height: 100vh;
+    padding: 20px 0;
+  }
 
-    .galeria {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 20px;
-      padding: 20px;
-    }
+/* Título con color primario variable */
+.titulo {
+  font-size: 2.5rem;
+  text-align: center;
+  margin: 30px 0 20px;
+  color: var(--color-primario);
+  font-family: 'Arial Black', sans-serif;
+}
 
-    .tarjeta {
-      position: relative;
-      overflow: hidden;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-      cursor: pointer;
-      transition: transform 0.3s ease;
-    }
+.galeria {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
 
-    .tarjeta img {
-      width: 100%;
-      height: 300px; /* o el alto que quieras */
-      object-fit: cover;
-      display: block;
-      transition: transform 0.3s ease;
-    }
+.tarjeta {
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  /* Sombra usando variable */
+  box-shadow: 0 4px 12px var(--color-sombra);
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
 
+.tarjeta img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
 
-    .tarjeta:hover img {
-      transform: scale(1.1);
-    }
+.tarjeta:hover img {
+  transform: scale(1.1);
+}
 
-    .overlay {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(0, 0, 0, 0.85);
-      color: white;
-      padding: 15px;
-      transform: translateY(100%);
-      transition: transform 0.3s ease;
-      font-size: 0.9em;
-    }
+.overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  /* Fondo semitransparente, puede quedar igual */
+  background: var(--color-overlay);
+  /* Texto en color variable */
+  color: var(--color-texto);
+  padding: 15px;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+  font-size: 0.9em;
+}
 
-    .tarjeta:hover .overlay {
-      transform: translateY(0%);
-    }
+.tarjeta:hover .overlay {
+  transform: translateY(0%);
+}
 
-    .overlay h3 {
-      margin: 0 0 8px;
-      font-size: 1rem;
-    }
+.overlay h3 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+}
 
-    .overlay p {
-      margin: 4px 0;
-      font-size: 0.85rem;
-    }
+.overlay p {
+  margin: 4px 0;
+  font-size: 0.85rem;
+}
 
-    .paginado {
-      background: linear-gradient(to bottom,  #78297e); /* degradado oscuro violeta-azulado */
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 15px;
-      padding-bottom: 3rem;
-    }
+.paginado {
+  /* Usamos color primario para fondo, o podemos hacer un gradiente con variable */
+  background: var(--color-paginado);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  padding-bottom: 3rem;
+}
 
-    .boton {
-      background-color: #ff4081;
-      color: white;
-      padding: 10px 20px;
-      text-decoration: none;
-      border-radius: 8px;
-      font-weight: bold;
-      transition: background-color 0.3s ease;
-      cursor: pointer;
-    }
+.boton {
+  background-color: var(--color-boton);
+  color: white;
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
 
-    .boton:hover:not(.deshabilitado) {
-      background-color: #e91e63;
-    }
+.boton:hover:not(.deshabilitado) {
+  background-color: var(--color-boton-hover);
+}
 
-    .boton.deshabilitado {
-      background-color: #ccc;
-      color: #666;
-      pointer-events: none;
-      cursor: default;
-    }
+.boton.deshabilitado {
+  background-color: var(--color-boton-deshabilitado);
+  color: var(--color-boton-texto-deshabilitado);
+  pointer-events: none;
+  cursor: default;
+}
 
-    .pagina-actual {
-      font-weight: bold;
-    }
-    .favorito-btn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: #ff4081;
-      color: white;
-      border: none;
-      padding: 8px 10px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 1.2rem;
-      z-index: 2;
-      transition: background-color 0.3s ease;
+.pagina-actual {
+  font-weight: bold;
+}
+
+.favorito-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: var(--color-boton);
+  color: white;
+  border: none;
+  padding: 8px 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.2rem;
+  z-index: 2;
+  transition: background-color 0.3s ease;
 }
 
 .favorito-btn:hover {
-  background-color: #e91e63;
+  background-color: var(--color-boton-hover);
 }
+
 
   </style>
   <script is:inline>
