@@ -1,22 +1,69 @@
+---
+import Header from '../components/Header.astro';
+---
+
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<slot />
-	</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Astro Basics</title>
+  </head>
+  <body>
+    <Header />
+    <main>
+      <slot />
+    </main>
+  </body>
 </html>
 
 <style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
+/* Variables para modo claro */
+:root {
+  --color-fondo: linear-gradient(to bottom, #f0e6ff, #d6c0ff);
+  --color-texto: #222222;
+  --color-primario: #ff4081;
+  --color-overlay: rgba(0, 0, 0, 0.85);
+  --color-boton: #ff4081;
+  --color-boton-hover: #e91e63;
+  --color-boton-deshabilitado: #ccc;
+  --color-boton-texto-deshabilitado: #666;
+  --color-sombra: rgba(0, 0, 0, 0.3);
+}
+
+/* Variables para modo oscuro */
+body.modo-oscuro {
+  --color-fondo: linear-gradient(to bottom, #2f1b55, #78297e);
+  --color-texto: #ffffff;
+  --color-primario: #ff4081;
+  --color-overlay: rgba(0, 0, 0, 0.85);
+  --color-boton: #ff4081;
+  --color-boton-hover: #e91e63;
+  --color-boton-deshabilitado: #444;
+  --color-boton-texto-deshabilitado: #999;
+  --color-sombra: rgba(0, 0, 0, 0.7);
+}
+
+/* Estilos base */
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--color-fondo);
+  color: var(--color-texto);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+	Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
+	sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+a {
+  color: var(--color-primario);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
 </style>

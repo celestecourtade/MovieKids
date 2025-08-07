@@ -1,11 +1,82 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 ---
 
 <Layout>
-	<Welcome />
+    <h1>Movie Kids</h1>
+
+    <section>
+      <h2>Login de usuario</h2>
+      <form>
+        <input type="text" placeholder="Usuario" required />
+        <input type="password" placeholder="Contraseña" required />
+        <button type="submit">Ingresar</button>
+      </form>
+    </section>
+
 </Layout>
+
+<style>
+	body {
+	  margin: 0;
+	  padding: 0;
+	  background-image: url('/img/background.jpg'); /* Cambiá la URL */
+	  background-size: cover;
+	  background-position: center;
+	  height: 100vh;
+	  display: flex;
+	  flex-direction: column;
+	  justify-content: center;
+	  align-items: center;
+	  font-family: 'Arial', sans-serif;
+	  color: white;
+	  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+	}
+
+	h1 {
+	  font-size: 3rem;
+	  margin-bottom: 1rem;
+	}
+
+	section {
+	  background: rgba(0, 0, 0, 0.6);
+	  padding: 2rem;
+	  border-radius: 1rem;
+	  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+	  width: 300px;
+	  display: flex;
+	  flex-direction: column;
+	  align-items: center;
+	}
+
+	form {
+	  display: flex;
+	  flex-direction: column;
+	  width: 100%;
+	}
+
+	input {
+	  margin-bottom: 1rem;
+	  padding: 0.75rem;
+	  border: none;
+	  border-radius: 0.5rem;
+	  font-size: 1rem;
+	}
+
+	button {
+	  padding: 0.75rem;
+	  background-color: #ff4081;
+	  border: none;
+	  color: white;
+	  font-weight: bold;
+	  font-size: 1rem;
+	  border-radius: 0.5rem;
+	  cursor: pointer;
+	  transition: background 0.3s;
+	}
+
+	button:hover {
+	  background-color: #e91e63;
+	}
+  </style>

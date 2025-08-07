@@ -1,0 +1,186 @@
+---
+import Layout from '@layouts/Layout.astro';
+import peliculas from '@data/pag-movie.json';
+
+
+const itemsPerPage = 14;
+const totalPages = Math.ceil(peliculas.length / itemsPerPage);
+
+const currentPage = 1;
+const start = 0;
+const end = itemsPerPage;
+
+const peliculasPaginadas = peliculas.slice(start, end);
+---
+
+<Layout>
+  <div class="page-container">
+    <div class="titulo">
+      <h1>MovieKids</h1>
+    <div class="galeria">
+      {peliculasPaginadas.map(pelicula => (
+        <div class="tarjeta">
+          <button onclick={`toggleFavorito(${pelicula.id})`} class="favorito-btn">❤️</button>
+          <a href={`/peliculas/${pelicula.id}`}>
+            <img src={pelicula.imagen} alt={pelicula.titulo} />
+            <div class="overlay">
+              <h3>{pelicula.titulo}</h3>
+              <p>{pelicula.descripcion}</p>
+              <p><strong>Categoría:</strong> {pelicula.categoria}</p>
+              <p><strong>Duración:</strong> {pelicula.duracion}</p>
+            </div>
+          </a>
+        </div>
+      ))}
+    </div>
+    </div>
+  </div>
+  
+  
+  <div class="paginado">
+    <a href="#" class="boton deshabilitado">Anterior</a>
+    <span class="pagina-actual">Página {currentPage} de {totalPages}</span>
+    <a href="/peliculas/page/2" class="boton">Siguiente</a>
+  </div>
+
+    <style>
+    .page-container {
+      background: linear-gradient(to bottom, #2f1b55, #78297e); /* degradado oscuro violeta-azulado */
+      min-height: 100vh; /* para que tome toda la altura visible */
+      padding: 20px 0;
+    }
+    /* Estilos para la paginación, tarjetas y más */
+    .titulo {
+      font-size: 2.5rem;
+      text-align: center;
+      margin: 30px 0 20px;
+      color: #ff4081;
+      font-family: 'Arial Black', sans-serif;
+    }
+
+    .galeria {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .tarjeta {
+      position: relative;
+      overflow: hidden;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .tarjeta img {
+      width: 100%;
+      height: 300px; /* o el alto que quieras */
+      object-fit: cover;
+      display: block;
+      transition: transform 0.3s ease;
+    }
+
+
+    .tarjeta:hover img {
+      transform: scale(1.1);
+    }
+
+    .overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.85);
+      color: white;
+      padding: 15px;
+      transform: translateY(100%);
+      transition: transform 0.3s ease;
+      font-size: 0.9em;
+    }
+
+    .tarjeta:hover .overlay {
+      transform: translateY(0%);
+    }
+
+    .overlay h3 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+    }
+
+    .overlay p {
+      margin: 4px 0;
+      font-size: 0.85rem;
+    }
+
+    .paginado {
+      background: linear-gradient(to bottom,  #78297e); /* degradado oscuro violeta-azulado */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      padding-bottom: 3rem;
+    }
+
+    .boton {
+      background-color: #ff4081;
+      color: white;
+      padding: 10px 20px;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+      cursor: pointer;
+    }
+
+    .boton:hover:not(.deshabilitado) {
+      background-color: #e91e63;
+    }
+
+    .boton.deshabilitado {
+      background-color: #ccc;
+      color: #666;
+      pointer-events: none;
+      cursor: default;
+    }
+
+    .pagina-actual {
+      font-weight: bold;
+    }
+    .favorito-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #ff4081;
+      color: white;
+      border: none;
+      padding: 8px 10px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.2rem;
+      z-index: 2;
+      transition: background-color 0.3s ease;
+}
+
+.favorito-btn:hover {
+  background-color: #e91e63;
+}
+
+  </style>
+  <script is:inline>
+    function toggleFavorito(id) {
+      let favoritos = JSON.parse(localStorage.getItem('favoritos')) || [];
+      if (favoritos.includes(id)) {
+        favoritos = favoritos.filter(favId => favId !== id);
+      } else {
+        favoritos.push(id);
+      }
+      localStorage.setItem('favoritos', JSON.stringify(favoritos));
+      alert('Película actualizada en Mi Lista');
+    }
+  </script>
+  
+
+
+</Layout>

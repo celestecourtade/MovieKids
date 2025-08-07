@@ -1,0 +1,111 @@
+---
+import Layout from '@layouts/Layout.astro';
+import peliculas from '@data/pag-movie.json'; // Asegurate que la ruta y exportación sean correctas
+
+// Esta función le dice a Astro qué IDs existen para generar páginas estáticas
+export function getStaticPaths() {
+  return peliculas.map(pelicula => ({
+    params: { id: String(pelicula.id) }
+  }));
+}
+
+const { id } = Astro.params;
+const pelicula = peliculas.find(p => String(p.id) === id);
+---
+
+<Layout>
+  <div class="page-container">
+  {pelicula ? (
+    <div class="detalle-pelicula">
+      <img src={pelicula.imagen} alt={pelicula.titulo} class="imagen-detalle" />
+      <div class="info-detalle">
+        <h2>{pelicula.titulo}</h2>
+        <p><strong>Sinopsis:</strong> {pelicula.descripcion}</p>
+        <p><strong>Duración:</strong> {pelicula.duracion}</p>
+        <p><strong>Categoría:</strong> {pelicula.categoria}</p>
+        <p><strong>Estrellas:</strong> {"⭐️".repeat(pelicula.estrellas || 4)}</p>
+        <a href="/peliculas" class="boton">← Volver</a>
+      </div>
+    </div>
+  ) : (
+    <p>Película no encontrada.</p>
+  )}
+  </div>
+
+<style>
+  .page-container {
+    background: linear-gradient(to bottom, #02216c, #005d9b); /* degradado oscuro violeta-azulado */
+      min-height: 100vh; /* para que tome toda la altura visible */
+      padding: 20px 0;
+  }
+  .detalle-pelicula {
+    display: flex;
+    justify-content: center;
+    gap: 2.5rem; /* espacio relativo */
+    padding: 2.5rem;
+  }
+
+  .imagen-detalle {
+    width: 100%;
+    max-width: 20rem; /* máximo ancho, unos 320px */
+    border-radius: 0.625rem; /* 10px */
+    box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.4); /* sombra relativa */
+    flex-shrink: 0; /* no achicar demasiado */
+  }
+
+  .info-detalle {
+    flex: 1 1 300px; /* que ocupe lo que queda, mínimo 300px */
+    max-width: 40rem; /* máximo ancho */
+  }
+
+  .info-detalle h2 {
+    font-size: 2rem; /* ya es relativo a la base del documento */
+    margin-bottom: 1rem;
+    color: #ff4081;
+  }
+
+  .info-detalle p {
+    margin: 0.625rem 0; /* 10px */
+    font-size: 1.1rem;
+    line-height: 1.5;
+    color: white;
+  }
+
+  .boton {
+    display: inline-block;
+    margin-top: 1.25rem; /* 20px */
+    padding: 0.625rem 1.25rem; /* 10px 20px */
+    background-color: #ff4081;
+    color: white;
+    border-radius: 0.5rem; /* 8px */
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+  }
+
+  .boton:hover {
+    background-color: #e91e63;
+  }
+
+  @media (max-width: 600px) {
+    .detalle-pelicula {
+      display: flex;
+      flex-direction: column ;
+      padding: 1rem;
+      gap: 1.5rem;
+    }
+
+    .info-detalle {
+      max-width: 100%;
+    }
+
+    .info-detalle h2 {
+      font-size: 1.5rem;
+    }
+
+    .info-detalle p {
+      font-size: 1rem;
+    }
+  }
+</style>
+
+</Layout>
