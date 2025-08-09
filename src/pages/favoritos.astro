@@ -1,99 +1,491 @@
 ---
 import Layout from '@layouts/Layout.astro';
-import peliculas from '@data/pag-movie.json';
+
 ---
 
 <Layout>
   <h1>Mi Lista de Favoritos</h1>
   <div id="favoritos-galeria" class="galeria"></div>
 
-  <style>
-    .galeria {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 20px;
-      padding: 20px;
-    }
-    .tarjeta {
-      position: relative;
-      overflow: hidden;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-      cursor: pointer;
-      transition: transform 0.3s ease;
-    }
-    .tarjeta img {
-      width: 100%;
-      height: 300px;
-      object-fit: cover;
-      display: block;
-      transition: transform 0.3s ease;
-    }
-    .tarjeta:hover img {
-      transform: scale(1.1);
-    }
-    .overlay {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(0,0,0,0.7);
-      color: white;
-      padding: 15px;
-      transform: translateY(100%);
-      transition: transform 0.3s ease;
-      font-size: 0.9em;
-    }
-    .tarjeta:hover .overlay {
-      transform: translateY(0%);
-    }
-    .overlay h3 {
-      margin: 0 0 8px;
-      font-size: 1rem;
-    }
-    .overlay p {
-      margin: 4px 0;
-      font-size: 0.85rem;
-    }
-    #favoritos-galeria p {
-      text-align: center;
-      font-size: 1.2rem;
-      color: #555;
-      margin-top: 2rem;
-    }
+  <style is:global>
+  .page-container {
+    /* Cambiamos el fondo fijo por la variable que cambia con el modo */
+    background: var(--color-fondo);
+    min-height: 100vh;
+    padding: 20px 0;
+  }
+
+/* Título con color primario variable */
+.titulo {
+  font-size: 2.5rem;
+  text-align: center;
+  margin: 30px 0 20px;
+  color: var(--color-primario);
+  font-family: 'Arial Black', sans-serif;
+}
+
+.galeria {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.tarjeta {
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  /* Sombra usando variable */
+  box-shadow: 0 4px 12px var(--color-sombra);
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.tarjeta img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.tarjeta:hover img {
+  transform: scale(1.1);
+}
+
+.overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  /* Fondo semitransparente, puede quedar igual */
+  background: var(--color-overlay);
+  /* Texto en color variable */
+  color: var(--color-texto);
+  padding: 15px;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+  font-size: 0.9em;
+}
+
+.tarjeta:hover .overlay {
+  transform: translateY(0%);
+}
+
+.overlay h3 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+}
+
+.overlay p {
+  margin: 4px 0;
+  font-size: 0.85rem;
+}
+
+.paginado {
+  /* Usamos color primario para fondo, o podemos hacer un gradiente con variable */
+  background: var(--color-paginado);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  padding-bottom: 3rem;
+}
+
+.boton {
+  background-color: var(--color-boton);
+  color: white;
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.boton:hover:not(.deshabilitado) {
+  background-color: var(--color-boton-hover);
+}
+
+.boton.deshabilitado {
+  background-color: var(--color-boton-deshabilitado);
+  color: var(--color-boton-texto-deshabilitado);
+  pointer-events: none;
+  cursor: default;
+}
+
+.pagina-actual {
+  font-weight: bold;
+}
+
+.favorito-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: var(--color-boton);
+  color: white;
+  border: none;
+  padding: 8px 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.2rem;
+  z-index: 2;
+  transition: background-color 0.3s ease;
+}
+
+.favorito-btn:hover {
+  background-color: var(--color-boton-hover);
+}
   </style>
 
-<script is:inline>
-    window.peliculasData = JSON.parse('${JSON.stringify(peliculas).replace(/'/g, "\\'")}');
-  
-    function mostrarFavoritos() {
-      const favoritasIds = JSON.parse(localStorage.getItem('favoritos') || '[]');
-      const favoritas = window.peliculasData.filter(p => favoritasIds.includes(p.id));
-  
-      const galeria = document.getElementById('favoritos-galeria');
-  
-      if (favoritas.length === 0) {
-        galeria.innerHTML = '<p>No tenés películas guardadas en tu lista aún.</p>';
-        return;
-      }
-  
-      galeria.innerHTML = favoritas.map(pelicula => `
-        <div class="tarjeta">
-          <a href="/peliculas/${pelicula.id}">
-            <img src="${pelicula.imagen}" alt="${pelicula.titulo}" />
-            <div class="overlay">
-              <h3>${pelicula.titulo}</h3>
-              <p>${pelicula.descripcion}</p>
-              <p><strong>Categoría:</strong> ${pelicula.categoria}</p>
-              <p><strong>Duración:</strong> ${pelicula.duracion}</p>
-            </div>
-          </a>
-        </div>
-      `).join('');
+<script>
+const peliculas = [
+
+  {
+    "id": 1,
+    "titulo": "Encanto",
+    "imagen": "/img/aladin.webp",
+    "descripcion": "Una familia mágica vive en las montañas de Colombia.",
+    "categoria": "Animación, Fantasía",
+    "duracion": "1h 42min",
+    "estrellas": 4
+  },
+  {
+    "id": 2,
+    "titulo": "Frozen II",
+    "imagen": "/img/frozendos.webp",
+    "descripcion": "Elsa y Anna se embarcan en una aventura para salvar su reino.",
+    "categoria": "Animación, Aventura",
+    "duracion": "1h 43min",
+    "estrellas": 4
+  },
+  {
+    "id": 3,
+    "titulo": "Luca",
+    "imagen": "/img/luca.webp",
+    "descripcion": "Un joven monstruo marino vive un verano inolvidable en Italia.",
+    "categoria": "Animación, Amistad",
+    "duracion": "1h 35min",
+    "estrellas": 4
+
+  },
+  {
+    "id": 4,
+    "titulo": "Moana",
+    "imagen": "/img/moana.webp",
+    "descripcion": "Una valiente joven navega por el océano para salvar a su pueblo.",
+    "categoria": "Animación, Aventura",
+    "duracion": "1h 47min",
+    "estrellas": 5
+
+  },
+  {
+    "id": 5,
+    "titulo": "Raya y el Último Dragón",
+    "imagen": "/img/RAYA.webp",
+    "descripcion": "Raya debe encontrar al último dragón para salvar su mundo.",
+    "categoria": "Acción, Animación",
+    "duracion": "1h 54min",
+    "estrellas": 5
+
+  },
+  {
+    "id": 6,
+    "titulo": "Soul",
+    "imagen": "/img/soul.webp",
+    "descripcion": "Un músico busca el significado de la vida después de un accidente.",
+    "categoria": "Fantasía, Música",
+    "duracion": "1h 40min",
+    "estrellas": 3
+  },
+  {
+    "id": 7,
+    "titulo": "Onward",
+    "imagen": "/img/onward.webp",
+    "descripcion": "Dos hermanos elfos buscan revivir a su padre con magia.",
+    "categoria": "Fantasía, Aventura",
+    "duracion": "1h 42min",
+    "estrellas": 2
+
+  },
+  {
+    "id": 8,
+    "titulo": "Coco",
+    "imagen": "/img/coco.webp",
+    "descripcion": "Miguel viaja al mundo de los muertos para descubrir su herencia.",
+    "categoria": "Música, Tradición",
+    "duracion": "1h 45min",
+    "estrellas": 5
+
+  },
+  {
+    "id": 9,
+    "titulo": "Valiente",
+    "imagen": "/img/valiente.webp",
+    "descripcion": "Merida desafía las reglas para forjar su propio destino.",
+    "categoria": "Aventura, Fantasía",
+    "duracion": "1h 33min",
+    "estrellas": 3
+  },
+  {
+    "id": 10,
+    "titulo": "Enredados",
+    "imagen": "/img/enredados.webp",
+    "descripcion": "Rapunzel descubre el mundo con la ayuda de un ladrón encantador.",
+    "categoria": "Comedia, Romance",
+    "duracion": "1h 40min",
+    "estrellas": 1
+
+  },
+  {
+    "id": 11,
+    "titulo": "Zootopia",
+    "imagen": "/img/zootopia.webp",
+    "descripcion": "Una conejita policía y un zorro estafador resuelven un misterio.",
+    "categoria": "Aventura, Comedia",
+    "duracion": "1h 48min",
+    "estrellas": 3
+  },
+  {
+    "id": 12,
+    "titulo": "Big Hero 6",
+    "imagen": "/img/bighero.webp",
+    "descripcion": "Un joven prodigio y su robot forman un equipo de superhéroes.",
+    "categoria": "Acción, Animación",
+    "duracion": "1h 42min",
+    "estrellas": 5
+
+  },
+  {
+    "id": 13,
+    "titulo": "WALL-E",
+    "imagen": "/img/walle.webp",
+    "descripcion": "Un pequeño robot limpiador descubre el amor y la esperanza.",
+    "categoria": "Animación, Ciencia ficción",
+    "duracion": "1h 38min",
+    "estrellas": 5
+  },
+  {
+    "id": 14,
+    "titulo": "Up",
+    "imagen": "/img/up.webp",
+    "descripcion": "Un anciano cumple su sueño de viajar en globo a Sudamérica.",
+    "categoria": "Aventura, Comedia",
+    "duracion": "1h 36min",
+    "estrellas": 3
+
+  },
+  {
+    "id": 15,
+    "titulo": "Buscando a Nemo",
+    "imagen": "/img/nemo.webp",
+    "descripcion": "Un pez payaso busca a su hijo perdido en el océano.",
+    "categoria": "Animación, Aventura",
+    "duracion": "1h 40min",
+    "estrellas": 3
+  },
+  {
+    "id": 16,
+    "titulo": "Intensamente",
+    "imagen": "/img/intensamente.webp",
+    "descripcion": "Las emociones de una niña cobran vida para ayudarla a crecer.",
+    "categoria": "Animación, Comedia",
+    "duracion": "1h 35min",
+    "estrellas": 3
+
+  },
+  {
+    "id": 17,
+    "titulo": "Ratatouille",
+    "imagen": "/img/ratatouil.webp",
+    "descripcion": "Una rata apasionada por la cocina sueña con ser chef.",
+    "categoria": "Comedia, Animación",
+    "duracion": "1h 51min",
+    "estrellas": 5
+  },
+  {
+    "id": 18,
+    "titulo": "Los Increíbles",
+    "imagen": "/img/increibles.webp",
+    "descripcion": "Una familia de superhéroes lucha por salvar el mundo.",
+    "categoria": "Acción, Animación",
+    "duracion": "1h 55min",
+    "estrellas": 3
+  },
+  {
+    "id": 19,
+    "titulo": "Lightyear",
+    "imagen": "/img/lightyear.webp",
+    "descripcion": "La historia del origen del héroe espacial Buzz Lightyear.",
+    "categoria": "Ciencia ficción, Aventura",
+    "duracion": "1h 40min",
+    "estrellas": 5
+
+  },
+  {
+    "id": 20,
+    "titulo": "Elemental",
+    "imagen": "/img/elemental.webp",
+    "descripcion": "Una historia de amor entre elementos de fuego y agua.",
+    "categoria": "Romance, Animación",
+    "duracion": "1h 42min",
+    "estrellas": 5
+
+  },
+  {
+    "id": 21,
+    "titulo": "Turning Red",
+    "imagen": "/img/turningred.webp",
+    "descripcion": "Una adolescente se transforma en un panda rojo gigante.",
+    "categoria": "Animación, Comedia",
+    "duracion": "1h 40min",
+    "estrellas": 5
+
+  },
+  {
+    "id": 22,
+    "titulo": "Sirenita",
+    "imagen": "/img/lasirenita.webp",
+    "descripcion": "Una joven descubre el poder de los deseos mágicos.",
+    "categoria": "Fantasía, Animación",
+    "duracion": "1h 35min",
+    "estrellas": 5
+
+  },
+  {
+    "id": 23,
+    "titulo": "El Rey León",
+    "imagen": "/img/reyleon.webp",
+    "descripcion": "La épica historia de un león que debe reclamar su reino.",
+    "categoria": "Animación, Aventura",
+    "duracion": "1h 28min",
+    "estrellas": 5
+
+  },
+  {
+    "id": 24,
+    "titulo": "Aladdín",
+    "imagen": "/img/aladin.webp",
+    "descripcion": "Un joven encuentra una lámpara mágica y un genio sorprendente.",
+    "categoria": "Aventura, Fantasía",
+    "duracion": "1h 30min",
+    "estrellas": 5
+
+  },
+  {
+    "id": 25,
+    "titulo": "La Bella y la Bestia",
+    "imagen": "/img/labellaylabestia.webp",
+    "descripcion": "Un amor inesperado florece entre una joven y una bestia.",
+    "categoria": "Romance, Fantasía",
+    "duracion": "1h 24min",
+    "estrellas": 5
+
+  },
+  {
+    "id": 26,
+    "titulo": "Mulán",
+    "imagen": "/img/mulan.webp",
+    "descripcion": "Una joven se disfraza de hombre para salvar a su familia.",
+    "categoria": "Acción, Aventura",
+    "duracion": "1h 27min",
+    "estrellas": 5
+
+  },
+  {
+    "id": 27,
+    "titulo": "Hércules",
+    "imagen": "/img/hercules.webp",
+    "descripcion": "El hijo de Zeus busca convertirse en un verdadero héroe.",
+    "categoria": "Animación, Comedia",
+    "duracion": "1h 33min",
+    "estrellas": 5
+
+  },
+  {
+    "id": 28,
+    "titulo": "Pocahontas",
+    "imagen": "/img/pocahontas.webp",
+    "descripcion": "La historia de una joven indígena y su amor prohibido.",
+    "categoria": "Romance, Historia",
+    "duracion": "1h 31min",
+    "estrellas": 5
+
+  }
+
+];
+
+
+  function mostrarFavoritos() {
+    window.peliculasData = JSON.parse(`${JSON.stringify(peliculas).replace(/'/g, "\\'")}`);
+
+    const favoritasIds = JSON.parse(localStorage.getItem('favoritos') || '[]');
+    const favoritas = window.peliculasData.filter(p => favoritasIds.includes(p.id));
+
+    const galeria = document.getElementById('favoritos-galeria');
+
+    if (favoritas.length === 0) {
+      galeria.innerHTML = '<p>No tenés películas guardadas en tu lista aún.</p>';
+      return;
     }
-  
-    document.addEventListener('DOMContentLoaded', mostrarFavoritos);
-  </script>
+
+    galeria.innerHTML = favoritas.map(pelicula => `
+    <div class="tarjeta">
+      <a href="/peliculas/${pelicula.id}">
+        <img src="${pelicula.imagen}" alt="${pelicula.titulo}" />
+        <div class="overlay">
+          <h3>${pelicula.titulo}</h3>
+          <p>${pelicula.descripcion}</p>
+          <p><strong>Categoría:</strong> ${pelicula.categoria}</p>
+          <p><strong>Duración:</strong> ${pelicula.duracion}</p>
+        </div>
+      </a>
+      <button class="favorito-btn" data-id="${pelicula.id}">❤️</button>
+    </div>
+  `).join('');
+    
+  }
+
+  document.addEventListener('DOMContentLoaded', mostrarFavoritos);
+
+  document.addEventListener("DOMContentLoaded", () => {
+  let favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
+
+  document.querySelectorAll(".favorito-btn").forEach((btn) => {
+    const id = parseInt(btn.getAttribute("data-id"));
+
+    // Como solo muestras favoritos, el botón siempre inicia con ❤️
+    btn.textContent = "❤️";
+
+    btn.addEventListener("click", () => {
+      favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
+
+      if (favoritos.includes(id)) {
+        // Quitar de favoritos
+        favoritos = favoritos.filter(favId => favId !== id);
+        localStorage.setItem("favoritos", JSON.stringify(favoritos));
+
+        // Cambiar botón a 🤍 para indicar que ya no está
+        btn.textContent = "🤍";
+
+        alert("Película eliminada de Mi Lista");
+
+        // Remover tarjeta de la galería para que desaparezca visualmente
+        btn.closest('.tarjeta').remove();
+
+        // Opcional: si no quedan favoritos, mostrar mensaje
+        const galeria = document.getElementById('favoritos-galeria');
+        if (favoritos.length === 0) {
+          galeria.innerHTML = '<p>No tenés películas guardadas en tu lista aún.</p>';
+        }
+      }
+    });
+  });
+});
+
+
+</script>
+
   
 
 

@@ -30,9 +30,10 @@ const { title } = Astro.props;
       /* Variables para modo claro */
       :root {
         --color-fondo: linear-gradient(to bottom, #f0e6ff, #d6c0ff);
-        --color-texto: #222222;
+        --color-titulo: #e91e63;
+        --color-texto: #000000;
         --color-primario: #ff4081;
-        --color-overlay: rgba(0, 0, 0, 0.85);
+        --color-overlay: rgba(255, 255, 255, 0.85);
         --color-boton: #ff4081;
         --color-boton-hover: #e91e63;
         --color-boton-deshabilitado: #ccc;
@@ -44,6 +45,7 @@ const { title } = Astro.props;
       html.dark {
         --color-fondo: linear-gradient(to bottom, #2f1b55, #78297e);
         --color-paginado: #78297e;
+        --color-titulo: #e91e63;
         --color-texto: #ffffff;
         --color-primario: #ff4081;
         --color-overlay: rgba(0, 0, 0, 0.85);

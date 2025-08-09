@@ -181,7 +181,7 @@ const peliculasPaginadas = peliculas.slice(start, end);
     let favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
     
     document.querySelectorAll(".favorito-btn").forEach((btn) => {
-      const id = String(btn.getAttribute("data-id"));
+      const id = parseInt(btn.getAttribute("data-id"));
       
       // Mostrar estado inicial
       btn.textContent = favoritos.includes(id) ? "❤️" : "🤍";

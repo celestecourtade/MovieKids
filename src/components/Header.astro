@@ -1,5 +1,6 @@
 ---
 // Header.astro
+import peliculas from '@data/pag-movie.json'; // ajusta la ruta si es necesario
 ---
 <header class="header">
   <div class="izquierda">
@@ -8,6 +9,7 @@
 
   <div class="centro">
     <a href="/favoritos" class="nav-link">Mi Lista</a>
+
 
     <input
       type="text"
@@ -20,6 +22,8 @@
   <div class="derecha">
     <a href="/cuenta" class="icono-cuenta">👤</a>
   </div>
+
+
 
   <style>
     .header {
@@ -127,7 +131,3 @@
     }
 
     </style>  
-
-
-
-
