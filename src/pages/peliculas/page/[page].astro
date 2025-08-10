@@ -2,6 +2,7 @@
 import Layout from '@layouts/Layout.astro';
 import peliculas from '@data/pag-movie.json';
 
+
 export function getStaticPaths() {
   const itemsPerPage = 14;
   const totalPages = Math.ceil(peliculas.length / itemsPerPage);
@@ -23,6 +24,7 @@ const totalPages = Math.ceil(peliculas.length / itemsPerPage);
 ---
 
 <Layout>
+
   <div class="page-container">
     <div class="titulo">
       <h1>MovieKids</h1>

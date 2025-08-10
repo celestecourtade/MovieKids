@@ -1,6 +1,9 @@
 ---
 import Layout from '@layouts/Layout.astro';
 import peliculas from '@data/pag-movie.json';
+import Carrusel from '../../components/Carrusel.astro';
+
+
 
 
 const itemsPerPage = 14;
@@ -14,6 +17,8 @@ const peliculasPaginadas = peliculas.slice(start, end);
 ---
 
 <Layout>
+  <Carrusel />
+
   <div class="page-container">
     <div class="titulo">
       <h1>MovieKids</h1>
