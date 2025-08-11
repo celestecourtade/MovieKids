@@ -1,0 +1,93 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+<style>
+  .container{
+    margin: 2rem;;
+  }
+  button {
+	  padding: 0.75rem;
+	  background-color: #ff4081;
+	  border: none;
+	  color: white;
+	  font-weight: bold;
+	  font-size: 1rem;
+	  border-radius: 0.5rem;
+	  cursor: pointer;
+	  transition: background 0.3s;
+	}
+
+	button:hover {
+	  background-color: #e91e63;
+	}
+  .contenido-card{
+    background-color: white;
+    width: fit-content;
+    padding: 0.5rem;
+    border-radius: 23px;
+    border: 1px solid gray;
+	}
+  .info{
+	  color: #e91e63 !important;
+    font-style: italic;
+	}
+</style>
+<Layout>
+  <section class="container">
+  <h1>Dashboard</h1>
+  <div id="contenido" class="contenido-card"></div> 
+
+</section>
+  <script is:inline>
+    const usuario = JSON.parse(localStorage.getItem("usuario"));
+
+    if (!usuario) {
+      Swal.fire("Debes iniciar sesión");
+      window.location.href = "/";
+    } else {
+      if (usuario.role === "admin") {
+        document.getElementById("contenido").innerHTML = `
+        <p>Nombre de usuario: <bclass="info">${usuario.username}</b></p>
+        <p>Correo: <b class="info">${usuario.email}</b></p>
+        <p>Rol: <b class="info">${usuario.role}</b></p>
+        <p>Vista de administrador</p>`;
+      } else {
+        document.getElementById("contenido").innerHTML = `
+        <p>Nombre de usuario: <b class="info">${usuario.username}</b></p>
+        <p>Correo: <b class="info">${usuario.email}</b></p>
+        <p>Rol: <b class="info">${usuario.role}</b></p>
+        <p>Vista de cliente</p>`;
+      }
+    }
+
+    const logoutBtn = document.getElementById("logout");
+    if (logoutBtn) {
+      document.getElementById("logout").addEventListener("click", () => {
+        Swal.fire({
+          icon: "question",
+          title: "¿Cerrar sesión?",
+          text: "Se cerrará tu sesión actual",
+          showCancelButton: true,
+          confirmButtonText: "Sí, salir",
+          cancelButtonText: "Cancelar",
+          confirmButtonColor: "#e91e63",
+          background: '#d6c0ff',
+          cancelButtonColor: "#3085d6"
+        }).then((result) => {
+          if (result.isConfirmed) {
+            localStorage.removeItem("usuario");
+            Swal.fire({
+              icon: "success",
+              title: "Sesión cerrada",
+              showConfirmButton: false,
+              timer: 1500
+            }).then(() => {
+              window.location.href = "/";
+            });
+          }
+        });
+      });
+    }
+
+  </script>
+</Layout>

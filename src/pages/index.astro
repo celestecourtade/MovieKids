@@ -1,79 +1,157 @@
 ---
 
+
 ---
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
+	<title>Movie Kids</title>
+</head>
 
-    <h1>Movie Kids</h1>
+<h1>Movie Kids</h1>
+<section>
+	<h2>Login de usuario</h2>
+	<p id="mensaje" style="color:red;"></p>
+	<form id="loginForm"> 
+	  <input type="email" id="email" placeholder="Email" required />
+	  <input type="password" id="password" placeholder="Contraseña" required/>
+	  <button type="submit">Ingresar</button>
+	</form>
+</section>
+<br>
+<section>
+	<h6 style="margin:0 0 2px 0 !important;">Login de usuario</h6>
+	<h6 style="margin:0 0 2px 0 !important;">Cliente: correo@mail.com</h6>
+	<h6 style="margin:0 0 2px 0 !important;">Admin: admin@mail.com</h6>
+	<h6 style="margin:0 0 2px 0 !important;">Password: 1234</h6>
+</section>
+<br><br>
+<script is:inline>
+const users = [
+{
+	"id": 1,
+	"username": "Cliente",
+	"email": "correo@mail.com",
+	"password": 1234,
+	"role": "cliente"
+	},
+	{
+	"id": 2,
+	"username": "Admin",
+	"email": "admin@mail.com",
+	"password": 1234,
+	"role": "admin"
+	}
+]
 
-    <section>
-      <h2>Login de usuario</h2>
-      <form>
-        <input type="text" placeholder="Usuario" required />
-        <input type="password" placeholder="Contraseña" required />
-        <button type="submit">Ingresar</button>
-      </form>
-    </section>
+document.getElementById("loginForm").addEventListener("submit", (e) => {
+e.preventDefault();
+
+const email = document.getElementById("email").value.trim();
+const password = document.getElementById("password").value.trim();
+
+const usuario = users.find(
+	(u) => u.email === email && String(u.password) === password
+);
+
+if (usuario) {
+	localStorage.setItem("usuario", JSON.stringify(usuario));
+
+	Swal.fire({
+	icon: "success",
+	title: `Bienvenido ${usuario.username}`,
+	text: `Rol: ${usuario.role}`,
+	confirmButtonText: "Continuar",
+	confirmButtonColor: "#e91e63",
+	background: '#d6c0ff',
+	color: '#fff'
+	}).then(() => {
+	window.location.href = "/peliculas";
+	});
+
+} else {
+	Swal.fire({
+	icon: "error",
+	title: "Credenciales incorrectas",
+	text: "Verifica tu email y contraseña",
+	confirmButtonColor: "#e91e63",
+	background: '#d6c0ff',
+	color: '#fff'
+	});
+}
+});
+
+
+const usuarioExiste = JSON.parse(localStorage.getItem("usuario"));
+if (usuarioExiste) {
+	window.location.href = "/peliculas";
+} 
+</script>
+
 <style>
-	body {
-	  margin: 0;
-	  padding: 0;
-	  background-image: url('/img/background.jpg'); /* Cambiá la URL */
-	  background-size: cover;
-	  background-position: center;
-	  height: 100vh;
-	  display: flex;
-	  flex-direction: column;
-	  justify-content: center;
-	  align-items: center;
-	  font-family: 'Arial', sans-serif;
-	  color: white;
-	  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
-	}
+body {
+  margin: 0;
+  padding: 0;
+  background-image: url('/img/background.jpg'); /* Cambiá la URL */
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Arial', sans-serif;
+  color: white;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+}
 
-	h1 {
-	  font-size: 5rem;
-	  margin-bottom: 1rem;
-	  color:#e91e63;
-	  font-weight: 900;
-	}
+h1 {
+  font-size: 5rem;
+  margin-bottom: 1rem;
+  color:#e91e63;
+  font-weight: 900;
+}
 
-	section {
-	  background: rgba(0, 0, 0, 0.6);
-	  padding: 2rem;
-	  border-radius: 1rem;
-	  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-	  width: 300px;
-	  display: flex;
-	  flex-direction: column;
-	  align-items: center;
-	}
+section {
+  background: rgba(0, 0, 0, 0.6);
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
-	form {
-	  display: flex;
-	  flex-direction: column;
-	  width: 100%;
-	}
+form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
 
-	input {
-	  margin-bottom: 1rem;
-	  padding: 0.75rem;
-	  border: none;
-	  border-radius: 0.5rem;
-	  font-size: 1rem;
-	}
+input {
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+}
 
-	button {
-	  padding: 0.75rem;
-	  background-color: #ff4081;
-	  border: none;
-	  color: white;
-	  font-weight: bold;
-	  font-size: 1rem;
-	  border-radius: 0.5rem;
-	  cursor: pointer;
-	  transition: background 0.3s;
-	}
+button {
+  padding: 0.75rem;
+  background-color: #ff4081;
+  border: none;
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
 
-	button:hover {
-	  background-color: #e91e63;
-	}
-  </style>
+button:hover {
+  background-color: #e91e63;
+}
+
+</style>

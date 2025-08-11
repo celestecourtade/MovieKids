@@ -1,18 +1,29 @@
 ---
-import Layout from '@layouts/Layout.astro';
-import peliculas from '@data/pag-movie.json'; // Asegurate que la ruta y exportación sean correctas
+import Layout from "@layouts/Layout.astro";
+import fs from 'fs/promises';
+import path from 'path';
 
-// Esta función le dice a Astro qué IDs existen para generar páginas estáticas
-export function getStaticPaths() {
+export async function getStaticPaths() {
+  const dataPath = path.resolve(process.cwd(), 'public/data/peliculas.json');
+  const peliculasJson = await fs.readFile(dataPath, 'utf-8');
+  const peliculas = JSON.parse(peliculasJson);
+
   return peliculas.map(pelicula => ({
     params: { id: String(pelicula.id) }
   }));
 }
 
+
+
 const { id } = Astro.params;
+
+// Aquí también debes leer el JSON (o puedes moverlo a una función común)
+const dataPath = path.resolve(process.cwd(), 'public/data/peliculas.json');
+const peliculasJson = await fs.readFile(dataPath, 'utf-8');
+const peliculas = JSON.parse(peliculasJson);
+
 const pelicula = peliculas.find(p => String(p.id) === id);
 ---
-
 <Layout>
   <div class="page-container">
   {pelicula ? (
@@ -31,7 +42,48 @@ const pelicula = peliculas.find(p => String(p.id) === id);
     <p>Película no encontrada.</p>
   )}
   </div>
-  
+
+	<!-- script de sesion -->
+  <script is:inline>
+    const usuario = JSON.parse(localStorage.getItem("usuario"));
+
+    if (!usuario) {
+      Swal.fire({
+        icon: "warning",
+        title: "Sesión requerida",
+        text: "Debes iniciar sesión para acceder a esta página",
+        confirmButtonText: "Ir al inicio",
+        confirmButtonColor: "#3085d6"
+      }).then(() => {
+        window.location.href = "/";
+      });
+    }
+
+    document.getElementById("logout").addEventListener("click", () => {
+      Swal.fire({
+        icon: "question",
+        title: "¿Cerrar sesión?",
+        text: "Se cerrará tu sesión actual",
+        showCancelButton: true,
+        confirmButtonText: "Sí, salir",
+        cancelButtonText: "Cancelar",
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          localStorage.removeItem("usuario");
+          Swal.fire({
+            icon: "success",
+            title: "Sesión cerrada",
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            window.location.href = "/";
+          });
+        }
+      });
+    });
+	</script>
   <style>
     :root {
       --page-bg: linear-gradient(to bottom, #02216c, #005d9b);

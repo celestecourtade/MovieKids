@@ -1,31 +1,53 @@
 ---
 // Header.astro
-import peliculas from '@data/pag-movie.json'; // ajusta la ruta si es necesario
+
 ---
 <header class="header">
   <div class="izquierda">
-    <a href="/" class="titulo">🎬 MovieKids</a>
+    <a href="/peliculas" class="titulo">🎬 MovieKids</a>
   </div>
 
   <div class="centro">
-    <a href="/favoritos" class="nav-link">Mi Lista</a>
+    <a href="/favoritos" class="nav-link">Mi Lista &#11088;</a>
 
 
-    <input
-      type="text"
-      id="busqueda"
-      placeholder="Buscar películas..."
-      class="input-busqueda"
-    />
+    <button id="theme-toggle" class="toggle-btn" title="modo oscuro/claro">🌙</button>
   </div>
 
   <div class="derecha">
-    <a href="/cuenta" class="icono-cuenta">👤</a>
+    <a href="/cuenta" class="user-class" title="cuenta">&#128100;</a>
+    <input id="logout" class="logout-class" title="salir de cuenta">
   </div>
 
+</header>
 
 
   <style>
+    .logout-class{
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="%23ff4081" viewBox="0 0 512 512"><path d="M256 73.825a182.18 182.18 0 0 0-182.18 182.18c0 100.617 81.567 182.17 182.18 182.17a182.175 182.175 0 1 0 0-364.35zm-18.096 86.22a18.099 18.099 0 0 1 36.197 0v53.975a18.099 18.099 0 0 1-36.197 0zM256 348.589a92.413 92.413 0 0 1-32.963-178.751v33.38a62.453 62.453 0 1 0 65.93 0v-33.38A92.415 92.415 0 0 1 256 348.588z"/></svg>') no-repeat center;
+      background-size: contain;
+      width: 32px;
+      height: 32px;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      font-size: 1.7rem;
+      filter: grayscale(100%);
+    }
+    .logout-class:hover{
+      filter: grayscale(0%);
+    }
+    .user-class {
+      background-color: #00000000;
+      border-radius: 50px;
+      font-size: x-large;
+      border: none;
+      text-decoration: none;
+    }
+    .user-class:hover{
+      filter: sepia(5);
+    }
+
     .header {
       display: flex;
       justify-content: space-between;
@@ -100,7 +122,8 @@ import peliculas from '@data/pag-movie.json'; // ajusta la ruta si es necesario
     .derecha .icono-cuenta {
       font-size: 1.7rem;
       text-decoration: none;
-      color: #ff4081; /* color más vivo */
+      color: #ff4081 !; /* color más vivo */
+      border-color: #ff4081;
       white-space: nowrap;
       transition: color 0.3s ease;
     }
