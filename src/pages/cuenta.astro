@@ -1,43 +1,92 @@
 ---
 import Layout from "../layouts/Layout.astro";
 ---
-<style>
-  .container{
-    margin: 2rem;;
-  }
-  button {
-	  padding: 0.75rem;
-	  background-color: #ff4081;
-	  border: none;
-	  color: white;
-	  font-weight: bold;
-	  font-size: 1rem;
-	  border-radius: 0.5rem;
-	  cursor: pointer;
-	  transition: background 0.3s;
-	}
 
-	button:hover {
-	  background-color: #e91e63;
-	}
-  .contenido-card{
-    background-color: white;
-    width: fit-content;
-    padding: 0.5rem;
-    border-radius: 23px;
-    border: 1px solid gray;
-	}
-  .info{
-	  color: #e91e63 !important;
-    font-style: italic;
-	}
+<style is:global>
+  .container {
+    max-width: 600px;
+    margin: 3rem auto;
+    padding: 1rem;
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .titulo {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 1.5rem;
+  }
+
+  .contenido-card {
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0px 0px 10px 6px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    transition: transform 0.3s;
+  }
+
+  .contenido-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .contenido-card p {
+    font-size: 1rem;
+    margin: 0.8rem 0;
+    border-bottom: 1px solid var(--color-texto);
+    padding-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .contenido-card p:last-child {
+    border-bottom: none;
+  }
+
+  .info {
+    font-weight: 600;
+    font-style: oblique;
+  }
+  .info2 {
+    color: var(--color-titulo);
+    font-weight: 600;
+    font-style: oblique;
+  }
+
+  .acciones {
+    margin-top: 2rem;
+    text-align: center;
+  }
+
+  button {
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, #ff4081, #e91e63);
+    border: none;
+    color: white;
+    font-weight: bold;
+    font-size: 1rem;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(233, 30, 99, 0.3);
+  }
+
+  button:hover {
+    background: linear-gradient(135deg, #e91e63, #c2185b);
+    transform: scale(1.05);
+  }
 </style>
+
 <Layout>
   <section class="container">
-  <h1>Dashboard</h1>
-  <div id="contenido" class="contenido-card"></div> 
+    <h1 >👤 Vista previa de la cuenta</h1>
+    <div id="contenido" class="contenido-card"></div>
+    <div class="acciones">
+      <button id="logout">🔓 Cerrar sesión</button>
+    </div>
+  </section>
 
-</section>
   <script is:inline>
     const usuario = JSON.parse(localStorage.getItem("usuario"));
 
@@ -45,24 +94,18 @@ import Layout from "../layouts/Layout.astro";
       Swal.fire("Debes iniciar sesión");
       window.location.href = "/";
     } else {
-      if (usuario.role === "admin") {
-        document.getElementById("contenido").innerHTML = `
-        <p>Nombre de usuario: <bclass="info">${usuario.username}</b></p>
-        <p>Correo: <b class="info">${usuario.email}</b></p>
-        <p>Rol: <b class="info">${usuario.role}</b></p>
-        <p>Vista de administrador</p>`;
-      } else {
-        document.getElementById("contenido").innerHTML = `
-        <p>Nombre de usuario: <b class="info">${usuario.username}</b></p>
-        <p>Correo: <b class="info">${usuario.email}</b></p>
-        <p>Rol: <b class="info">${usuario.role}</b></p>
-        <p>Vista de cliente</p>`;
-      }
+      const contenido = `
+        <p><b>👤 Nombre de usuario:</b> <span class="info2">${usuario.username}</span></p>
+        <p><b>📧 Correo:</b> <span class="info">${usuario.email}</span></p>
+        <p><b>🛡️ Rol:</b> <span class="info2">${usuario.role}</span></p>
+        <p><b>👁️ Vista de</b> <span class="info">${usuario.role === "admin" ? "administrador" : "cliente"}</span></p>
+      `;
+      document.getElementById("contenido").innerHTML = contenido;
     }
 
     const logoutBtn = document.getElementById("logout");
     if (logoutBtn) {
-      document.getElementById("logout").addEventListener("click", () => {
+      logoutBtn.addEventListener("click", () => {
         Swal.fire({
           icon: "question",
           title: "¿Cerrar sesión?",
@@ -71,7 +114,7 @@ import Layout from "../layouts/Layout.astro";
           confirmButtonText: "Sí, salir",
           cancelButtonText: "Cancelar",
           confirmButtonColor: "#e91e63",
-          background: '#d6c0ff',
+          background: '#fbe9f0',
           cancelButtonColor: "#3085d6"
         }).then((result) => {
           if (result.isConfirmed) {
@@ -88,6 +131,5 @@ import Layout from "../layouts/Layout.astro";
         });
       });
     }
-
   </script>
 </Layout>
